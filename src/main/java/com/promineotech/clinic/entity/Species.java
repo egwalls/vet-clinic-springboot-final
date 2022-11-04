@@ -1,0 +1,7 @@
+package com.promineotech.clinic.entity;
+
+public enum Species {
+  DOG, CAT, BIRD, HORSE, MONKEY, FISH, SNAKE, IGUANA, GECKO,
+  RABBIT, CHICKEN, DUCK, TURKEY, HAMSTER, GUINEA_PIG, MOUSE, 
+  RAT, GERBIL, FERRET, GOAT, HEDGEHOG, PIG, SHEEP, OTHER;
+}

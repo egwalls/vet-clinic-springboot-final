@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    password: vet_clinic
+    username: vet_clinic
+    url: jdbc:mysql://localhost:3306/vet_clinic
+
+logging:
+  level:
+    root: warn
+    '[com.promineotech]': debug
