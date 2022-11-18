@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.promineotech.clinic.entity.Animals;
+import com.promineotech.clinic.entity.Customers;
 import com.promineotech.clinic.entity.Species;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
@@ -117,6 +118,20 @@ public class DefaultAnimalsDao implements AnimalsDao {
     params.put("breed", breed);
     params.put("symptoms", symptoms);
     return params;
+  }
+
+  @Override
+  public Optional<Animals> updateAnimalOwner(String animalId, Customers customer) {
+//    String sql = ""
+//        + "UPDATE animals SET customer_fk = :customer_fk "
+//        + "WHERE animal_id = :animal_id";
+//    
+//    Map<String, Object> params = new HashMap<>();
+//    
+//    Long customerFk = //
+//    //params.put("animal_id", animalId);
+    
+    return Optional.empty();
   }
 
 }

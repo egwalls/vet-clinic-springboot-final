@@ -12,6 +12,10 @@ INSERT INTO dx (dx_id, dx_name, dx_description) VALUES ('tibia_fracture', 'Fract
 INSERT INTO animals (animal_id, animal_name, species, breed, symptoms, customer_fk) VALUES ('fluffy63','Fluffy', 'DOG', 'Samoyed', 'thowing up, fever of 100F', '1');
 INSERT INTO animals (animal_id, animal_name, species, breed, symptoms, customer_fk) VALUES ('steve16', 'Steve', 'SNAKE', 'Milk Snake', 'laceration on side, appears infected','2');
 
+-- dx_animals
+INSERT INTO dx_animals (dx_animal_id, dx_fk, animal_fk) VALUES ('fluffy63_tibiaFracture', 3, 1);
 
+-- translation: show all records of a specific animal, showing us which dx have been applied
+SELECT animals.animal_name, dx.dx_name FROM  FROM animals INNER JOIN dx ON  
 
 

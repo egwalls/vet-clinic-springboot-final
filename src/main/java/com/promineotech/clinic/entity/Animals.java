@@ -16,4 +16,5 @@ public class Animals {
   private Species species;
   private String breed;
   private String symptoms;
+  private Customers customer;
 }

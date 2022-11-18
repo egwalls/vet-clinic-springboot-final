@@ -3,6 +3,7 @@ package com.promineotech.dao;
 import java.util.List;
 import java.util.Optional;
 import com.promineotech.clinic.entity.Animals;
+import com.promineotech.clinic.entity.Customers;
 import com.promineotech.clinic.entity.Species;
 
 public interface AnimalsDao {
@@ -16,4 +17,6 @@ public interface AnimalsDao {
       Species species, String breed, String symptoms);
   
   Optional<Animals> deleteAnimal (String animalId, String animalName);
+  
+  Optional<Animals> updateAnimalOwner(String animalId, Customers customer);
 }

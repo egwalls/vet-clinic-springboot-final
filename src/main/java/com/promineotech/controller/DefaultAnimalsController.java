@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-public class UnDefaultAnimalsController implements AnimalsController {
+public class DefaultAnimalsController implements AnimalsController {
 
   @Autowired
   private AnimalsService animalService;
