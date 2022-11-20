@@ -12,5 +12,5 @@ public interface DxService {
   
   Optional<Dx> updateDx(String dxId, String dxName, String description);
   
-  Optional<Dx> deleteDx(String dxId, String dxName);
+  Optional<Dx> deleteDx(String dxId);
 }

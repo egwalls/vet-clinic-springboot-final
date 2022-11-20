@@ -10,22 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.promineotech.clinic.entity.Animals;
 import com.promineotech.clinic.entity.Customers;
 import com.promineotech.clinic.entity.Species;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-
 @Component
-@Slf4j
 public class DefaultAnimalsDao implements AnimalsDao {
 
   @Autowired
   private NamedParameterJdbcTemplate jdbcTemplate;
+  
+  @Autowired
+  private DaoSupport ds;
 
   @Override
   public List<Animals> fetchAnimal(String animalId) {
-    log.info("DAO: animalId= {}", animalId);
+    
 
     //@formatter:off
     String sql= ""
@@ -36,11 +36,18 @@ public class DefaultAnimalsDao implements AnimalsDao {
 
     Map<String, Object> params = new HashMap<>();
     params.put("animal_id", animalId);
-
+    
     return jdbcTemplate.query(sql, params, new RowMapper<>() {
 
       @Override
       public Animals mapRow(ResultSet rs, int rowNum) throws SQLException {
+        //set customer to null if fk is 0, prevents 500 error
+        Long l = rs.getLong("customer_fk");
+        Customers customer = null;
+        if (l != 0) {
+          customer = ds.getCustomerByFk(l);
+        }
+        
         return Animals.builder()
             .animalPk(rs.getLong("animal_pk"))
             .animalId(rs.getString("animal_id"))
@@ -48,25 +55,11 @@ public class DefaultAnimalsDao implements AnimalsDao {
             .species(Species.valueOf(rs.getString("species")))
             .breed(rs.getString("breed"))
             .symptoms(rs.getString("symptoms"))
+            .customer(customer)
             .build();
         //@formatter:on
       }
     });
-  }
-
-  @Override
-  public Optional<Animals> deleteAnimal(String animalId, String animalName) {
-    String sql = ""
-        + "DELETE FROM animals WHERE "
-        + "animal_id = :animal_id AND animal_name = :animal_name";
-    
-    Map<String, Object> params = new HashMap<>();
-    params.put("animal_id", animalId);
-    params.put("animal_name", animalName);
-    
-    jdbcTemplate.update(sql, params);
-    return Optional.ofNullable(Animals.builder().animalId(animalId).animalName(animalName).build());
-    
   }
 
   @Override
@@ -77,11 +70,10 @@ public class DefaultAnimalsDao implements AnimalsDao {
         + "(animal_id, animal_name, species, breed, symptoms) VALUES "
         + "(:animal_id, :animal_name, :species, :breed, :symptoms)";
 
-    Map<String, Object> params = allParamsToHashMap(animalId, animalName, species, breed, symptoms);
+    Map<String, Object> params = animalParamsToHashMap(animalId, animalName, species, breed, symptoms);
 
     jdbcTemplate.update(sql, params);
-    return Optional.ofNullable(Animals.builder().animalId(animalId).animalName(animalName).species(species)
-        .breed(breed).symptoms(symptoms).build());
+    return Optional.ofNullable(animalBuilder(animalId, animalName, species, breed, symptoms));
   }
 
   @Override
@@ -93,23 +85,42 @@ public class DefaultAnimalsDao implements AnimalsDao {
         + "WHERE animal_id = :animal_id";
     
     
-    Map<String, Object> params = allParamsToHashMap(animalId, animalName, species, breed, symptoms);
+    Map<String, Object> params = animalParamsToHashMap(animalId, animalName, species, breed, symptoms);
     
     jdbcTemplate.update(sql, params);
     
-    return Optional.ofNullable(Animals.builder().animalId(animalId).animalName(animalName)
-        .species(species).breed(breed).symptoms(symptoms).build());
+    return Optional.ofNullable(animalBuilder(animalId, animalName, species, breed, symptoms));
   }
   
-  /**
-   * @param animalId
-   * @param animalName
-   * @param species
-   * @param breed
-   * @param symptoms
-   * @return
-   */
-  private Map<String, Object> allParamsToHashMap(String animalId, String animalName, Species species,
+  @Override
+  public Optional<Animals> deleteAnimal(String animalId) {
+    String sql = ""
+        + "DELETE FROM animals "
+        + "WHERE animal_id = :animal_id";
+    
+    Map<String, Object> params = new HashMap<>();
+    params.put("animal_id", animalId);
+    
+    jdbcTemplate.update(sql, params);
+    return Optional.ofNullable(Animals.builder()
+        .animalId(animalId)
+        .build());
+    
+  }
+
+  //helper methods
+  protected Animals animalBuilder(String animalId, String animalName, Species species, String breed,
+      String symptoms) {
+    return Animals.builder()
+        .animalId(animalId)
+        .animalName(animalName)
+        .species(species)
+        .breed(breed)
+        .symptoms(symptoms)
+        .build();
+  }
+  
+  private Map<String, Object> animalParamsToHashMap(String animalId, String animalName, Species species,
       String breed, String symptoms) {
     Map<String, Object> params = new HashMap<>();
     params.put("animal_id", animalId);
@@ -120,18 +131,33 @@ public class DefaultAnimalsDao implements AnimalsDao {
     return params;
   }
 
+  
+  /*
+   * Adds customer to animal after customer has been created
+   */
   @Override
-  public Optional<Animals> updateAnimalOwner(String animalId, Customers customer) {
-//    String sql = ""
-//        + "UPDATE animals SET customer_fk = :customer_fk "
-//        + "WHERE animal_id = :animal_id";
-//    
-//    Map<String, Object> params = new HashMap<>();
-//    
-//    Long customerFk = //
-//    //params.put("animal_id", animalId);
+  public Optional<Animals> updateAnimalOwner(String animalId, String customerId) {
+    String sql = ""
+        + "UPDATE animals SET customer_fk = :customer_fk "
+        + "WHERE animal_id = :animal_id";
+    Customers customer = ds.getCustomer(customerId);
+    Animals animal = ds.getAnimal(animalId);
     
-    return Optional.empty();
+    Map<String, Object> params = new HashMap<>();
+    params.put("animal_id", animal.getAnimalId());
+    params.put("customer_fk", customer.getCustomerPk());
+    
+    jdbcTemplate.update(sql, params);
+    
+    return Optional.ofNullable(Animals.builder()
+        .animalPk(animal.getAnimalPk())
+        .animalId(animal.getAnimalId())
+        .animalName(animal.getAnimalName())
+        .species(animal.getSpecies())
+        .breed(animal.getBreed())
+        .symptoms(animal.getSymptoms())
+        .customer(customer)
+        .build());
   }
-
+  
 }

@@ -48,10 +48,6 @@ public class DefaultCustomersDao implements CustomersDao {
   public Optional<Customers> createCustomers(String customerId, String fName, String lName,
       String phone, String address) {
     
-    //use animalId to look up animalFk, use animalFk in SQL statement
-    
-    
-    
     String sql = "INSERT INTO customers "
         + "(customer_id, f_Name, l_Name, phone, address) VALUES "
         + "(:customer_id, :fName, :lName, :phone, :address)";
@@ -64,7 +60,7 @@ public class DefaultCustomersDao implements CustomersDao {
         .lName(lName)
         .phone(phone)
         .address(address)
-        .build());
+        .build()); 
   }
 
   @Override
@@ -86,19 +82,17 @@ public class DefaultCustomersDao implements CustomersDao {
   }
 
   @Override
-  public Optional<Customers> deleteCustomers(String customerId, String lName) {
+  public Optional<Customers> deleteCustomers(String customerId) {
     
     String sql = "DELETE FROM customers WHERE "
-        + "customer_id = :customer_id AND l_name = :l_name";
+        + "customer_id = :customer_id";
     
     Map<String, Object> params = new HashMap<>();
     params.put("customer_id", customerId);
-    params.put("l_name", lName);
     
     jdbcTemplate.update(sql, params);
     return Optional.ofNullable(Customers.builder()
         .customerId(customerId)
-        .lName(lName)
         .build());
   }
   

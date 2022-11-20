@@ -126,6 +126,8 @@ public interface AnimalsController {
               description = "The symptoms an animal is showing (ie broken bone)")
       }
     )
+ 
+  
   
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
@@ -241,12 +243,7 @@ public interface AnimalsController {
               name = "animalId",
               allowEmptyValue = false,
               required = false,
-              description = "The animalId (i.e., 'fluffy 63')"),
-          @Parameter(
-              name = "animalName",
-              allowEmptyValue = false,
-              required = false,
-              description = "The animal's name (ie Spot)"),
+              description = "The animalId (i.e., 'fluffy 63')")
         
       }
     )
@@ -255,13 +252,58 @@ public interface AnimalsController {
   @ResponseStatus(code = HttpStatus.OK)
   Optional<Animals> deleteAnimals(
       @RequestParam(required = false)
+      String animalId);
+
+  
+  @Operation(
+      summary = "Updates an animal with a customer association",
+      description = "Updates an animal given a required animalId and customerId",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "An animal is updated to include customer.",
+              content = @Content(
+                  mediaType = "application/json",
+              schema = @Schema(implementation = Animals.class))),
+          @ApiResponse(
+              responseCode = "400",
+              description = "The request parameters are invalid.",
+              content = @Content(
+                  mediaType = "application/json")),
+          @ApiResponse(
+              responseCode = "404",
+              description = "Unable to update animal with the input criteria.",
+              content = @Content(
+                  mediaType = "application/json")),
+          @ApiResponse(
+              responseCode = "500",
+              description = "An unplanned error occured.",
+              content = @Content(
+                  mediaType = "application/json"))
+      },
+      parameters = {
+          @Parameter(
+              name = "animalId",
+              allowEmptyValue = false,
+              required = false,
+              description = "The animalId (i.e., 'fluffy 63')"),
+          @Parameter(
+              name = "customerId",
+              allowEmptyValue = false,
+              required = false,
+              description = "Unique id which identifies an already created customer"
+                  + "(i.e. pet_parker)")
+      }
+    )
+  
+  @PutMapping("/customerUpdate")
+  @ResponseStatus(code = HttpStatus.OK)
+  Animals updateAnimalOwner(
+      @RequestParam(required = false)
       String animalId,
       @RequestParam(required = false)
-      String animalName);
+      String customerId);
 
-
-  //@formatter:on
-  
-  
+  //@formatter:on 
   
 }

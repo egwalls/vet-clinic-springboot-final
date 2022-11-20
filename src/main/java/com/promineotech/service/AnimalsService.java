@@ -15,6 +15,8 @@ public interface AnimalsService {
   Optional<Animals> updateAnimals(String animalId, String animalName, Species species, String breed,
       String symptoms);
   
-  Optional<Animals> deleteAnimals(String animalId, String animalName);
-
+  Optional<Animals> deleteAnimals(String animalId);
+  
+  Animals updateAnimalOwner(String animalId, String customerId);
+  
 }

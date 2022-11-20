@@ -209,7 +209,7 @@ public interface CustomersController {
   
   @Operation(
       summary = "Deletes a customer",
-      description = "Deletes a customer given a required customerId, and lName",
+      description = "Deletes a customer given a required customerId",
       responses = {
           @ApiResponse(
               responseCode = "200",
@@ -239,11 +239,6 @@ public interface CustomersController {
               allowEmptyValue = false,
               required = false,
               description = "The customerId (i.e., 'petparker5')"),
-          @Parameter(
-              name = "lName",
-              allowEmptyValue = false,
-              required = false,
-              description = "The customer's last name (ie Smith)"),
           
       }
     )
@@ -252,9 +247,7 @@ public interface CustomersController {
   @ResponseStatus(code = HttpStatus.OK)
   Optional<Customers> deleteCustomers(
       @RequestParam(required = false)
-      String customerId,
-      @RequestParam(required = false)
-      String lName);
+      String customerId);
       
   
 

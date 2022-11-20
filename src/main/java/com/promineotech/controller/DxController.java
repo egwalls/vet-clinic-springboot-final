@@ -212,12 +212,7 @@ public interface DxController {
               name = "dxId",
               allowEmptyValue = false,
               required = false,
-              description = "The dxId (i.e., 'fever_low')"),
-          @Parameter(
-              name = "dxName",
-              allowEmptyValue = false,
-              required = false,
-              description = "The dx's name (ie 'Low Grade Fever')")
+              description = "The dxId (i.e., 'fever_low')")
         
       }
     )
@@ -226,9 +221,7 @@ public interface DxController {
   @ResponseStatus(code = HttpStatus.OK)
   Optional<Dx> deleteDx(
       @RequestParam(required = false)
-      String dxId,
-      @RequestParam(required = false)
-      String dxName);
+      String dxId);
 
 
   //@formatter:on

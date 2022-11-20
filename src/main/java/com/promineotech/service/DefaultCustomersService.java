@@ -19,38 +19,24 @@ public class DefaultCustomersService implements CustomersService {
   @Transactional(readOnly = true)
   @Override
   public List<Customers> fetchCustomers(String customerId) {
-    log.info("fetchCustomers method was called from the service layer with customerId = {}",
-        customerId);
-    
     return customersDao.fetchCustomers(customerId);
   }
 
   @Override
   public Optional<Customers> createCustomers(String customerId, String fName, String lName,
       String phone, String address) {
-    log.info("createCustomers method was called from the service layer with customerId = {},"
-        + " fName = {}, lName = {}, phone = {} and address = {}", customerId, fName, lName,
-        phone, address);
-
     return customersDao.createCustomers(customerId, fName, lName, phone, address);
   }
 
   @Override
   public Optional<Customers> updateCustomers(String customerId, String fName, String lName,
-      String phone, String address) {
-    log.info("updateCustomers method was called from the service layer with customerId = {},"
-        + " fName = {}, lName = {}, phone = {} and address = {}", customerId, fName, lName,
-        phone, address);
-    
+      String phone, String address) {    
     return customersDao.updateCustomers(customerId, fName, lName, phone, address);
   }
 
   @Override
-  public Optional<Customers> deleteCustomers(String customerId, String lName) {
-    log.info("deleteCustomers method was called from the service layer with customerId = {},"
-        + " and lName = {}", customerId, lName);
-    
-    return customersDao.deleteCustomers(customerId, lName);
+  public Optional<Customers> deleteCustomers(String customerId) {    
+    return customersDao.deleteCustomers(customerId);
   }
 
 }

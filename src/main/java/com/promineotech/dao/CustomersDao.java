@@ -14,5 +14,5 @@ public interface CustomersDao {
   Optional<Customers> updateCustomers(String customerId, String fName, String lName, String phone,
       String address);
   
-  Optional<Customers> deleteCustomers(String customerId, String lName);
+  Optional<Customers> deleteCustomers(String customerId);
 }

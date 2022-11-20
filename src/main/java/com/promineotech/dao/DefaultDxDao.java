@@ -59,7 +59,6 @@ public class DefaultDxDao implements DxDao {
         .build());
   }
 
-  
 
   @Override
   public Optional<Dx> updateDx(String dxId, String dxName, String description) {
@@ -80,19 +79,17 @@ public class DefaultDxDao implements DxDao {
   }
 
   @Override
-  public Optional<Dx> deleteDx(String dxId, String dxName) {
+  public Optional<Dx> deleteDx(String dxId) {
     
     String sql = "DELETE FROM dx WHERE "
-        + "dx_id = :dx_id AND dx_name = :dx_name";
+        + "dx_id = :dx_id";
     
     Map<String, Object> params = new HashMap<>();
     params.put("dx_id", dxId);
-    params.put("dx_name", dxName);
     
     jdbcTemplate.update(sql, params);
     return Optional.ofNullable(Dx.builder()
         .dxId(dxId)
-        .dxName(dxName)
         .build());
   }
   

@@ -8,17 +8,14 @@ import com.promineotech.clinic.entity.Dx_animal;
 
 public interface DxAnimalService {
   
-  List<Dx_animal> fetchDxAnimal(String animalId);
+  List<Dx_animal> fetchDxAnimalByAnimalId(String animalId);
   
-  Dx_animal fetchDxAnimal(String dxAnimalId, Dx dx, Animals animal);
+  List<Dx_animal> fetchDxAnimal(String dxAnimalId);
 
-  /**
-   * @param dxAnimalId
-   * @param animal
-   * @param dx
-   * @return
-   */
   Dx_animal createDxAnimal(String dxAnimalId, String animalId, String dxId);
   
+  Dx_animal updateDxAnimal(String dxAnimalId, String newDxAnimalId, String animalId, String dxId);
+  
+  Optional<Dx_animal> deleteDxAnimal(String dxAnimalId);
   
 }

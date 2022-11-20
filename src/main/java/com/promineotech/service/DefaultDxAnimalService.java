@@ -1,13 +1,10 @@
 package com.promineotech.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.promineotech.clinic.entity.Animals;
-import com.promineotech.clinic.entity.Dx;
 import com.promineotech.clinic.entity.Dx_animal;
 import com.promineotech.dao.DxAnimalDao;
 
@@ -19,32 +16,30 @@ public class DefaultDxAnimalService implements DxAnimalService {
   
   @Transactional(readOnly = true)
   @Override
-  public List<Dx_animal> fetchDxAnimal(String animalId) {
-    return dxAnimalDao.fetchDxAnimal(animalId);
+  public List<Dx_animal> fetchDxAnimalByAnimalId(String animalId) {
+    return dxAnimalDao.fetchDxAnimalByAnimalId(animalId);
   }
-
+  
+  @Transactional(readOnly = true)
   @Override
-  public Dx_animal fetchDxAnimal(String dxAnimalId, Dx dx, Animals animal) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Dx_animal> fetchDxAnimal(String dxAnimalId) {
+    return dxAnimalDao.fetchDxAnimal(dxAnimalId);
   }
   
   @Override
   public Dx_animal createDxAnimal(String dxAnimalId, String animalId, String dxId) {
-    Animals animalObj = getAnimal(animalId);
-    Dx dxObj = getDx(dxId);
-    
-    return dxAnimalDao.createDxAnimal(dxAnimalId, animalObj, dxObj);
+    return dxAnimalDao.createDxAnimal(dxAnimalId, animalId, dxId);
   }
   
-  protected Animals getAnimal(String animalId) {
-    return dxAnimalDao.fetchAnimals(animalId).orElseThrow(() -> new NoSuchElementException(
-        "Engine with ID = was not found."));
+  @Override
+  public Dx_animal updateDxAnimal(String dxAnimalId, String newDxAnimalId, String animalId, 
+      String dxId) {
+    return dxAnimalDao.updateDxAnimal(dxAnimalId, newDxAnimalId,animalId, dxId);
   }
   
-  protected Dx getDx(String dxId) {
-    return dxAnimalDao.fetchDx(dxId).orElseThrow(() -> new NoSuchElementException(
-        "Engine with ID = was not found."));
+  @Override
+  public Optional<Dx_animal> deleteDxAnimal(String dxAnimalId) {
+    return dxAnimalDao.deleteDxAnimal(dxAnimalId);
   }
 
 }
